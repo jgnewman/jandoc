@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+var files    = require('fs'),
+    argParse = require('../lib/argparser').parse,
+    vers     = '0.0.1',
+    curdir   = process.env.PWD,
+    bashArgs = process.argv.slice(2),
+    fail     = 'Sorry, you passed in an invalid argument.',
+    usage    = [
+        ''
+      , '  Usage: npm-test [options]'
+      , ''
+      , '  Options:'
+      , ''
+      , '    -v, --version           Display the version of npm-test'
+      , '    -h, --help              Display help information'
+      , ''
+    ].join('\n'),
+    args;
+
+
+function procedure(argArray) {
+  console.log('You npm app works!  The arguments were ' + argArray);
+  process.exit(0);
+}
+
+args = argParse(bashArgs, [
+  ['-v', '--version'],
+  ['-h', '--help']
+]);
+
+if (args['-v']) {
+  console.log(vers);
+  process.exit(0);
+} else if (args['-h']) {
+  console.log(usage);
+  process.exit(0);
+} else if (args._noflag) {
+  procedure(args._noflag);
+  process.exit(0);
+} else {
+  console.error(fail);
+  process.exit(1);
+}

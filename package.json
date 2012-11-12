@@ -1,0 +1,31 @@
+{
+    "name"         : "jandoc",
+    "version"      : "0.0.1",
+    "author"       : "John Newman",
+    "description"  : "A wrapper for the pandoc document conversion tool with more options.",
+    "keywords"     : [
+                         "document",
+                         "converter",
+                         "generator",
+                         "batch",
+                         "pandoc",
+                         "markup",
+                         "markdown",
+                         "md",
+                         "rtf",
+                         "doc",
+                         "docx",
+                         "html"
+                     ],
+    "main"         : "jandoc.js",
+    "bin"          : { 
+                         "jandoc" : "./bin/jandoc"
+                     },
+    "dependencies" : {
+                         "execSync" : ">=0.0.1"
+                     },
+    "repository"   : {
+                         "type" : "git",
+                         "url"  : "https://github.com/jgnewman/jandoc.git"
+                     } 
+}
