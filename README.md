@@ -16,6 +16,8 @@ different ways:
 1. You can call it through the command line, just like you might expect.
 2. You have an object-oriented API you can use from within a JS module.
 
+**Note:** As of now, Jandoc does not support `xmlto` and `texexec` options.
+
 Dependencies
 ------------
 

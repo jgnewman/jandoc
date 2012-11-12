@@ -21,9 +21,7 @@
     "bin"          : { 
                          "jandoc" : "./bin/jandoc"
                      },
-    "dependencies" : {
-                         "execSync" : ">=0.0.1"
-                     },
+    "dependencies" : {},
     "repository"   : {
                          "type" : "git",
                          "url"  : "https://github.com/jgnewman/jandoc.git"
