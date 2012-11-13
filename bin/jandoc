@@ -1,44 +1,74 @@
 #!/usr/bin/env node
 
-var files    = require('fs'),
-    argParse = require('../lib/argparser').parse,
-    vers     = '0.0.1',
-    curdir   = process.env.PWD,
-    bashArgs = process.argv.slice(2),
-    fail     = 'Sorry, you passed in an invalid argument.',
-    usage    = [
-        ''
-      , '  Usage: npm-test [options]'
-      , ''
-      , '  Options:'
-      , ''
-      , '    -v, --version           Display the version of npm-test'
-      , '    -h, --help              Display help information'
-      , ''
-    ].join('\n'),
+var fs        = require('fs'),
+    util      = require('util'),
+    argParse  = require('../lib/argparser').parse,
+    cmdLine   = require('../lib/api').cmdLine,
+    procedure = require('../lib/procedure'),
+    vers      = '0.0.1',
+    bashArgs  = process.argv.slice(2),
     args;
 
+/*
+ * Output to the console.
+ */
+function puts(error, stdout, stderr) {
+  util.puts(stdout);
+}
 
-function procedure(argArray) {
-  console.log('You npm app works!  The arguments were ' + argArray);
+/*
+ * Output to the console and end.
+ */
+function putsEnd(error, stdout, stderr) {
+  puts(error, stdout, stderr);
   process.exit(0);
 }
 
+/*
+ * Process arguments and create "sym" references.
+ */
 args = argParse(bashArgs, [
   ['-v', '--version'],
-  ['-h', '--help']
+  ['-h', '--help'],
+  ['-d', '--input-data'],
+  ['-o', '--output-location']
 ]);
 
+/*
+ * If the user is asking for the version, output the version.
+ */
 if (args['-v']) {
   console.log(vers);
   process.exit(0);
+
+/*
+ * If the user is asking for help, output the help.
+ */  
 } else if (args['-h']) {
-  console.log(usage);
-  process.exit(0);
+  console.log('\njandoc -d [INPUT DATA] -o [OUTPUT LOCATION] [PANDOC OPTIONS]\n\n' + [
+    'When calling Jandoc, please provide a path to either a',
+    'file or a folder in the place of [INPUT DATA].  Please also',
+    'provide a path to a file or folder in the place of [OUTPUT LOCATION].',
+    'If your output does not contain a file extension, it will be assumed',
+    'to be a folder.  The Jandoc -o flag overwrites the Pandoc -o flag.',
+    '',
+    '    -d   --input-data [FILE/FOLDER]',
+    '    -o   --output-location [FILE/FOLDER]',
+    ''
+  ].join('\n'));
+  console.log('Following are the Pandoc options:\n');
+  cmdLine('pandoc -h', putsEnd);
+
+/*
+ * If there are arguments without flags, it's a mistake.  Alert such.
+ */  
 } else if (args._noflag) {
-  procedure(args._noflag);
-  process.exit(0);
-} else {
-  console.error(fail);
+  console.error('Every argument must follow a flag when calling Jandoc.');
   process.exit(1);
+
+/*
+ * Otherwise, execute the main procedure.
+ */
+} else {
+  procedure.init(bashArgs, args);
 }
