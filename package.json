@@ -1,6 +1,6 @@
 {
     "name"         : "jandoc",
-    "version"      : "0.0.1",
+    "version"      : "0.0.2",
     "author"       : "John Newman <rescuecreative@gmail.com>",
     "description"  : "Exposes the Pandoc API to Node.js and adds the ability to convert multiple files at once.",
     "keywords"     : [
