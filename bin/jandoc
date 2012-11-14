@@ -3,7 +3,7 @@
 var fs        = require('fs'),
     util      = require('util'),
     argParse  = require('../lib/argparser').parse,
-    cmdLine   = require('../lib/api').cmdLine,
+    cmdLine   = require('child_process').exec,
     procedure = require('../lib/procedure'),
     vers      = '0.0.1',
     bashArgs  = process.argv.slice(2),
@@ -31,7 +31,9 @@ args = argParse(bashArgs, [
   ['-v', '--version'],
   ['-h', '--help'],
   ['-d', '--input-data'],
-  ['-o', '--output-location']
+  ['-o', '--output-location'],
+  ['-t', '-w', '--to', '--write'],
+  ['-f', '-r', '--from', '--read']
 ]);
 
 /*

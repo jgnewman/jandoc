@@ -62,24 +62,49 @@ The above example converts all files in `inputDir` into files with corresponding
 `outputDir`.  Since both arguments are directory paths, we use the `-t` argument to specify
 output file type.  If `outputDir` doesn't exist yet, it will be created.
 
+**Note:** As of now, Jandoc does _not_ recursively delve into subfolders of your input directory
+to convert files within them.
+
 Apart from these small differences, the command line API is synonymous with the Pandoc
 command line API.  Simply pass in other Pandoc arguments and they will be handed over to Pandoc.
 
 JavaScript API
 --------------
 
-For now the JavaScript API is dirt simple but there are plans in place to awesomize it
-in the near future.  Currently it installs as a Node.js module so to pull it in, simply
-require it:
+The JavaScript API allows you to access Jandoc functionality in two different ways.  First things
+first though, you'll need to import it into Node:
 
 ```javascript
 var jandoc = require('jandoc');
 ```
 
-Then, to use it, all you have to do is pass a Unix command to `jandoc.cmd` like so:
+The above code brings in a function. The first way to access Jandoc functionality is to
+pass an options object to that function.  For example:
+
+```javascript
+jandoc({
+  "input"  : "./inputDir/",
+  "output" : "./outputDir/",
+  "write"  : "docx"
+});
+```
+
+Your available options are equivalents of all of the Jandoc/Pandoc bash flags with the exceptions
+that `--input-data` has become `input` and `--output-location` has become `output`.  Other than
+that, the option keys are the long names of the bash flags in camel case rather than with dashes.
+So if the bash flag is `--tab-stop`, the option key will be `tabStop`. If the flag does not take
+an argument in the command line, set it to `true` in the options object.
+
+One special case is the `--variable` flag as you can pass multiple variables to the command line
+in the form of `--variable varName=value`.  In the options object, the value of your `variable`
+key will also be an object wherein each subkey will be the variable name and the value will be its
+value.
+
+The other way you can access Jandoc functionality is by calling `jandoc.cmd` and passing it
+a bash argument string.  For example:
 
 ```javascript
 jandoc.cmd('-d inputDir -o outputDir -t docx');
 ```
 
-This will pass your Jandoc command through Node into the Unix interface.
+This will pass your Jandoc command through Node straight into the Unix interface.
