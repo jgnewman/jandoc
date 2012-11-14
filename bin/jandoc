@@ -24,6 +24,25 @@ function putsEnd(error, stdout, stderr) {
   process.exit(0);
 }
 
+
+/*
+ * Go ahead and do an asynchronous check to see if Pandoc is actually installed.
+ * This won't block the app if Pandoc exists on the system but, if it doesn't, you'll
+ * get an error whenever the check comes back.
+ */
+cmdLine('which pandoc', function (err, stdout) {
+  
+  /*
+   * If 'which pandoc' throws an error, die.
+   */
+  if (err || !stdout) {
+    console.error('ERROR: Could not find Pandoc on your system.\n       Please make sure Haskell and Pandoc are installed before running Jandoc.');
+    process.exit(1);
+  }
+});
+
+
+
 /*
  * Process arguments and create "sym" references.
  */
@@ -47,6 +66,7 @@ if (args['-v']) {
  * If the user is asking for help, output the help.
  */  
 } else if (args['-h']) {
+
   console.log('\njandoc -d [INPUT DATA] -o [OUTPUT LOCATION] [PANDOC OPTIONS]\n\n' + [
     'When calling Jandoc, please provide a path to either a',
     'file or a folder in the place of [INPUT DATA].  Please also',
@@ -58,6 +78,7 @@ if (args['-v']) {
     '    -o   --output-location [FILE/FOLDER]',
     ''
   ].join('\n'));
+  
   console.log('Following are the Pandoc options:\n');
   cmdLine('pandoc -h', putsEnd);
 
@@ -74,3 +95,5 @@ if (args['-v']) {
 } else {
   procedure.init(bashArgs, args);
 }
+
+

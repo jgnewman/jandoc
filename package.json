@@ -2,7 +2,7 @@
     "name"         : "jandoc",
     "version"      : "0.0.1",
     "author"       : "John Newman",
-    "description"  : "A wrapper for the pandoc document conversion tool with more options.",
+    "description"  : "Exposes the Pandoc API to Node.js and adds the ability to convert multiple files at once.",
     "keywords"     : [
                          "document",
                          "converter",

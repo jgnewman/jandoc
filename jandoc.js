@@ -3,7 +3,8 @@
  */
 
 var procedure = require('./lib/procedure'),
-    argParse  = require('./lib/argparser').parse;
+    argParse  = require('./lib/argparser').parse,
+    cmdLine   = require('child_process').exec;
 
 /*
  * Trim extraneous whitespace from strings.
@@ -206,5 +207,29 @@ jandoc.cmd = callCommand;
 /*
  * Expose the jandoc function.
  */
-module.exports = jandoc;
+module.exports = (function () {
+
+  /*
+   * When the module gets required, do an asynchronous check to see if
+   * Pandoc exists on the system.
+   */
+  cmdLine('which pandoc', function (err, stdout) {
+    
+    /*
+     * If 'which pandoc' throws an error, die.
+     */
+    if (err || !stdout) {
+      console.error('ERROR: Could not find Pandoc on your system.\n       Please make sure Haskell and Pandoc are installed before running Jandoc.');
+      process.exit(1);
+    }
+  });
+
+  /*
+   * Ignore the Pandoc check and return the jandoc function.  This way,
+   * if Pandoc does exist, the user won't get held up by the check.  If
+   * it doesn't, you'll get an error at some point.
+   */
+  return jandoc;
+
+}());
 
