@@ -55,11 +55,11 @@ That said, Jandoc allows you to pass in directory paths for both the `-d` (a.k.a
 and `-o` (a.k.a, `--output-location`) arguments.
 
 ```bash
-~$ jandoc -d inputDir -o outputDir -t docx
+~$ jandoc -d inputDir -o outputDir --write docx
 ```
 
 The above example converts all files in `inputDir` into files with corresponding names inside
-`outputDir`.  Since both arguments are directory paths, we use the `-t` argument to specify
+`outputDir`.  Since both arguments are directory paths, we use the `--write` argument to specify
 output file type.  If `outputDir` doesn't exist yet, it will be created.
 
 **Note:** As of now, Jandoc does _not_ recursively delve into subfolders of your input directory
@@ -104,7 +104,7 @@ The other way you can access Jandoc functionality is by calling `jandoc.cmd` and
 a bash argument string.  For example:
 
 ```javascript
-jandoc.cmd('-d inputDir -o outputDir -t docx');
+jandoc.cmd('-d inputDir -o outputDir --write docx');
 ```
 
 This will pass your Jandoc command through Node straight into the Unix interface.
