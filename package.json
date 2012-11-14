@@ -15,7 +15,8 @@
                          "rtf",
                          "doc",
                          "docx",
-                         "html"
+                         "html",
+                         "haskell"
                      ],
     "main"         : "jandoc.js",
     "bin"          : { 
