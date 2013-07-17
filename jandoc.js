@@ -172,7 +172,7 @@ function buildArgString(options) {
  * Define a function that initializes the jandoc
  * functionality with a command line string.
  */
-function callCommand(str) {
+function callCommand(str, callback) {
   var cleanArgs = trim(str).split(/\s+/g), // turns args into an array
       args      = argParse(cleanArgs, [    // put args into a symlinked object
         ['-v', '--version'],
@@ -182,7 +182,12 @@ function callCommand(str) {
         ['-t', '-w', '--to', '--write'],
         ['-f', '-r', '--from', '--read']
       ]);
-  procedure.init(cleanArgs, args);         // initialize with both items
+  
+  if (callback) {
+    pandoc = procedure(cleanArgs, args, callback);  // initialize with both items
+  } else {
+    pandoc = procedure(cleanArgs, args);            // initialize with both items    
+  }
 }
 
 /*
@@ -193,7 +198,14 @@ function callCommand(str) {
  * We'll call it the jandoc function and expose
  * it to the user.
  */
-function jandoc(options) {
+function jandoc(options, callback) {
+  var argString = buildArgString(options);
+  callCommand(argString, callback);
+}
+
+/* (also make a sync version)
+ */
+jandoc.sync = function (options) {
   var argString = buildArgString(options);
   callCommand(argString);
 }
@@ -202,7 +214,13 @@ function jandoc(options) {
  * Allow the user to access the command line
  * version through jandoc.cmd.
  */
-jandoc.cmd = callCommand;
+jandoc.cmd = function (str, callback) {
+  callCommand(str, callback);
+}
+
+/* (also make a sync version)
+ */
+jandoc.cmdSync = callCommand;
 
 /*
  * Expose the jandoc function.
