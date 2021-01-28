@@ -1,6 +1,6 @@
 {
     "name"         : "jandoc",
-    "version"      : "0.0.2",
+    "version"      : "0.0.3",
     "author"       : "John Newman <rescuecreative@gmail.com>",
     "description"  : "Exposes the Pandoc API to Node.js and adds the ability to convert multiple files at once.",
     "keywords"     : [
@@ -19,12 +19,12 @@
                          "haskell"
                      ],
     "main"         : "jandoc.js",
-    "bin"          : { 
+    "bin"          : {
                          "jandoc" : "./bin/jandoc"
                      },
     "dependencies" : {},
     "repository"   : {
                          "type" : "git",
                          "url"  : "https://github.com/jgnewman/jandoc.git"
-                     } 
+                     }
 }

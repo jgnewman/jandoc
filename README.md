@@ -3,12 +3,14 @@ Jandoc
 
 >A wrapper for the Pandoc document conversion tool with more options.
 
+## This repository has been archived for security concerns.
+
 [Pandoc](https://github.com/jgm/pandoc) is a universal markup converter written
 in Haskell.  It's a great tool for converting one kind of document into another
 but I thought it might be nice if there was a way to use it to convert multiple
 documents at once and expose its API through JavaScript.
 
-Jandoc is written in Node.js and does just that.  The API is exposed in
+Jandoc is written in Node.js and does just that. The API is exposed in
 two different ways:
 
 1. You can call it through the command line, just like you might expect.
@@ -71,7 +73,7 @@ command line API.  Simply pass in other Pandoc arguments and they will be handed
 JavaScript API
 --------------
 
-The JavaScript API allows you to access Jandoc functionality in two different ways.  First things
+The JavaScript API allows you to access Jandoc functionality in two different ways. First things
 first though, you'll need to import it into Node:
 
 ```javascript
@@ -95,10 +97,7 @@ that, the option keys are the long names of the bash flags in camel case rather 
 So if the bash flag is `--tab-stop`, the option key will be `tabStop`. If the flag does not take
 an argument in the command line, set it to `true` in the options object.
 
-One special case is the `--variable` flag as you can pass multiple variables to the command line
-in the form of `--variable varName=value`.  In the options object, the value of your `variable`
-key will also be an object wherein each subkey will be the variable name and the value will be its
-value.
+**Note that for the sake of security, any options that reference URLs have been disabled and any options that take strings may throw errors on strings that don't appear safe.**
 
 The other way you can access Jandoc functionality is by calling `jandoc.cmd` and passing it
 a bash argument string.  For example:

@@ -3,7 +3,8 @@
  */
 
 var procedure = require('./lib/procedure'),
-    argParse  = require('./lib/argparser').parse,
+    argParse  = require('./lib/argparser').parse
+    isSane    = require('./lib/sanitize'),
     cmdLine   = require('child_process').exec;
 
 /*
@@ -39,83 +40,14 @@ function bashifyKey(key) {
 /*
  * Pass an object to the jandoc function and each
  * key will represent a command line flag.
- *
- * Options -
- * input: DIR/FILE PATH
- * output: DIR/FILE PATH
- * read: FILE TYPE STRING
- * write: FILE TYPE STRING
- * dataDir: DIR PATH
- * strict: BOOLEAN
- * parseRaw: BOOLEAN
- * smart: BOOLEAN  // refers to smart quotes
- * oldDashes: BOOLEAN
- * baseHeaderLevel: NUMBER
- * indentedCodeClasses: STRING
- * nomalize: BOOLEAN
- * preserveTabs: BOOLEAN
- * tabStop: NUMBER
- * standalone: BOOLEAN
- * template: FILE PATH
- * variable: OBJECT
- * printDefaultTemplate: FILE PATH
- * noWrap: BOOLEAN
- * columns: NUMBER
- * toc: BOOLEAN
- * noHighlight: BOOLEAN
- * highlightStyle: STRING
- * includeInHeader: FILE PATH
- * includeBeforeBody: FILE PATH
- * includeAfterBody: FILE PATH
- * selfContained: BOOLEAN
- * offline: BOOLEAN
- * html5: BOOLEAN
- * ascii: BOOLEAN
- * referenceLinks: BOOLEAN
- * atxHeaders: BOOLEAN
- * chapters: BOOLEAN
- * numberSections: BOOLEAN
- * noTexLigatures: BOOLEAN
- * listings: BOOLEAN
- * incremental: BOOLEAN
- * slideLevel: NUMBER
- * sectionDivs: BOOLEAN
- * emailObfuscation: STRING (none || javascript || references)
- * idPrefix: STRING
- * titlePrefix: STRING
- * css: URL PATH
- * referenceOdt: FILE PATH
- * referenceDocx: FILE PATH
- * epubStylesheet: FILE PATH
- * epubCoverImage: FILE PATH
- * epubMetadata: FILE PATH
- * epubEmbedFont: ARRAY
- * latexEngine: PROGRAM NAME
- * bibliography: FILE PATH
- * csl: FILE PATH
- * citationAbbreviations: FILE PATH
- * natbib: BOOLEAN
- * biblatex: BOOLEAN
- * latexmathml: URL PATH
- * asciimathml: URL PATH
- * mathml: URL PATH
- * mimetex: URL PATH
- * webtex: URL PATH
- * jsmath: URL PATH
- * mathjax: URL PATH
- * gladtex: BOOLEAN
- * dumpArgs: BOOLEAN
- * ignoreArgs: BOOLEAN
- * version: BOOLEAN
- * help: BOOLEAN
  */
 function buildArgString(options) {
   var argString = '', key, type, val, i;
   for (key in options) {
-    if (has(options, key)) {
+    if (has(options, key) && isSane(key, options[key])) {
       val = options[key];
       type = typeof val;
-      
+
       /*
        * Input and output are outliers because
        * we've modified them.  Deal with those
@@ -126,7 +58,7 @@ function buildArgString(options) {
       } else if (key === 'output') {
         argString += (' -o ' + val);
       } else {
-        
+
         /*
          * Procedure to deal with boolean options and
          * non-object options.
@@ -136,32 +68,19 @@ function buildArgString(options) {
         } else if (type !== 'object') {
           argString += (' ' + bashifyKey(key) + ' ' + val);
         } else {
-          
-          /*
-           * The variable option is an object.  Deal with
-           * it as such.
-           */
-          if (key === 'variable') {
-            for (i in val) {
-              if (has(val, i)) {
-                argString += (' --variable ' + i + '=' + val[i]);
-              }
-            }
-          
-          /*
-           * The epubEmbedFont variable is an array.  Deal
-           * with it as such.
-           */
-          } else if (key === 'epubEmbedFont') {
-            for (i = 0; i < val.length; i += 1) {
-              argString += (' --epub-embed-font ' + val[i]);
-            }
+
+        /*
+          * The epubEmbedFont variable is an array.  Deal
+          * with it as such.
+          */
+          for (i = 0; i < val.length; i += 1) {
+            argString += (' --epub-embed-font ' + val[i]);
           }
         }
       }
     }
   }
-  
+
   /*
    * Cut off extraneous whitespace and return the argument string.
    */
@@ -182,11 +101,11 @@ function callCommand(str, callback) {
         ['-t', '-w', '--to', '--write'],
         ['-f', '-r', '--from', '--read']
       ]);
-  
+
   if (callback) {
     pandoc = procedure(cleanArgs, args, callback);  // initialize with both items
   } else {
-    pandoc = procedure(cleanArgs, args);            // initialize with both items    
+    pandoc = procedure(cleanArgs, args);            // initialize with both items
   }
 }
 
@@ -232,7 +151,7 @@ module.exports = (function () {
    * Pandoc exists on the system.
    */
   cmdLine('which pandoc', function (err, stdout) {
-    
+
     /*
      * If 'which pandoc' throws an error, die.
      */

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-var fs        = require('fs'),
-    util      = require('util'),
+var util      = require('util'),
     argParse  = require('../lib/argparser').parse,
     cmdLine   = require('child_process').exec,
     procedure = require('../lib/procedure'),
@@ -31,7 +30,7 @@ function putsEnd(error, stdout, stderr) {
  * get an error whenever the check comes back.
  */
 cmdLine('which pandoc', function (err, stdout) {
-  
+
   /*
    * If 'which pandoc' throws an error, die.
    */
@@ -64,7 +63,7 @@ if (args['-v']) {
 
 /*
  * If the user is asking for help, output the help.
- */  
+ */
 } else if (args['-h']) {
 
   console.log('\njandoc -d [INPUT DATA] -o [OUTPUT LOCATION] [PANDOC OPTIONS]\n\n' + [
@@ -78,13 +77,13 @@ if (args['-v']) {
     '    -o   --output-location [FILE/FOLDER]',
     ''
   ].join('\n'));
-  
+
   console.log('Following are the Pandoc options:\n');
   cmdLine('pandoc -h', putsEnd);
 
 /*
  * If there are arguments without flags, it's a mistake.  Alert such.
- */  
+ */
 } else if (args._noflag) {
   console.error('Every argument must follow a flag when calling Jandoc.');
   process.exit(1);
